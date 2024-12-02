@@ -11,8 +11,8 @@ fn main() {
     for line in input.lines() {
         let line = line.unwrap();
         let mut cols = line.split_whitespace();
-        col1.push(cols.next().unwrap().to_string());
-        col2.push(cols.next().unwrap().to_string());
+        col1.push(cols.next().unwrap().parse::<u32>().unwrap());
+        col2.push(cols.next().unwrap().parse::<u32>().unwrap());
     }
 
     col1.sort();
@@ -21,8 +21,7 @@ fn main() {
     let res = col1
         .iter()
         .zip(col2.iter())
-        .map(|(c1, c2)| (c1.parse::<u32>().unwrap(), c2.parse::<u32>().unwrap()))
-        .map(|(a, b)| a.abs_diff(b))
+        .map(|(a, b)| a.abs_diff(*b))
         .sum::<u32>();
 
     println!("{res}");
