@@ -1,14 +1,16 @@
 use std::collections::HashMap;
+use std::env;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
 fn main() {
-    println!("Distance: {}", part1());
-    println!("Similarity Score: {}", part2());
+    let infile = env::args().nth(1).expect("must specify input file");
+    println!("Distance: {}", part1(&infile));
+    println!("Similarity Score: {}", part2(&infile));
 }
 
-fn part1() -> u32 {
-    let input = BufReader::new(File::open("../input").unwrap());
+fn part1(infile: &str) -> u32 {
+    let input = BufReader::new(File::open(infile).unwrap());
     let num_lines = 1000;
 
     let mut col1 = Vec::with_capacity(num_lines);
@@ -30,8 +32,8 @@ fn part1() -> u32 {
         .sum::<u32>()
 }
 
-fn part2() -> u32 {
-    let input = BufReader::new(File::open("../input").unwrap());
+fn part2(infile: &str) -> u32 {
+    let input = BufReader::new(File::open(infile).unwrap());
     let num_lines = 1000;
 
     let mut col1 = Vec::with_capacity(num_lines);
