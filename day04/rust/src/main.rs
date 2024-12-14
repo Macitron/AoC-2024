@@ -13,20 +13,8 @@ fn main() {
     // println!("first rows length: {}", rows[0].len()); <-- 140
     // println!("there are {} rows", rows.len());        <-- 140
 
-    let mut xmas_count = 0;
-    for row_idx in 0..rows.len() {
-        for col_idx in 0..rows[row_idx].len() {
-            if rows[row_idx][col_idx] == b'X' {
-                for horiz in [Horizontal::Left, Horizontal::Right, Horizontal::None] {
-                    for vert in [Vertical::Down, Vertical::Up, Vertical::None] {
-                        xmas_count += check_mas(&rows, row_idx, col_idx, horiz, vert);
-                    }
-                }
-            }
-        }
-    }
-
-    println!("XMAS count: {xmas_count}");
+    println!("XMAS count: {}", part1(&rows));
+    println!("X-MAS count: {}", part2(&rows));
 }
 
 #[derive(Copy, Clone)]
@@ -41,6 +29,23 @@ enum Vertical {
     Up,
     Down,
     None,
+}
+
+fn part1(rows: &[Vec<u8>]) -> u32 {
+    let mut xmas_count = 0;
+    for row_idx in 0..rows.len() {
+        for col_idx in 0..rows[row_idx].len() {
+            if rows[row_idx][col_idx] == b'X' {
+                for horiz in [Horizontal::Left, Horizontal::Right, Horizontal::None] {
+                    for vert in [Vertical::Down, Vertical::Up, Vertical::None] {
+                        xmas_count += check_mas(rows, row_idx, col_idx, horiz, vert);
+                    }
+                }
+            }
+        }
+    }
+
+    xmas_count
 }
 
 fn check_mas(
@@ -63,7 +68,6 @@ fn check_mas(
                 row - 1
             }
             Vertical::Down => {
-
                 if row >= 139 {
                     return 0;
                 }
@@ -94,4 +98,32 @@ fn check_mas(
     }
 
     1
+}
+
+fn part2(rows: &[Vec<u8>]) -> u32 {
+    let mut x_mas_count = 0;
+    for row_idx in 1..rows.len() - 1 {
+        for col_idx in 1..rows[row_idx].len() - 1 {
+            if rows[row_idx][col_idx] == b'A' {
+                x_mas_count += check_x_mas(rows, row_idx, col_idx);
+            }
+        }
+    }
+
+    x_mas_count
+}
+
+fn check_x_mas(rows: &[Vec<u8>], row_idx: usize, col_idx: usize) -> u32 {
+    let top_left = rows[row_idx - 1][col_idx - 1];
+    let bottom_right = rows[row_idx + 1][col_idx + 1];
+    let top_right = rows[row_idx - 1][col_idx + 1];
+    let bottom_left = rows[row_idx + 1][col_idx - 1];
+
+    // top left -> bottom right
+    let first =
+        (top_left == b'M' && bottom_right == b'S') || (top_left == b'S' && bottom_right == b'M');
+    let second =
+        (bottom_left == b'M' && top_right == b'S') || (bottom_left == b'S' && top_right == b'M');
+
+    u32::from(first && second)
 }
